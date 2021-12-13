@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create_target_entity
+      author: deermakov
+      changes:
+        - createTable:
+            tableName: TARGET_ENTITY
+            columns:
+              - column:
+                  name: POSITION
+                  type: NUMBER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TEXT
+                  type: CHAR(10)
+                  constraints:
+                    nullable: true
+        - addPrimaryKey:
+            columnNames: POSITION
+            constraintName: PK_TARGET_ENTITY
+            tableName: TARGET_ENTITY
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: TARGET_ENTITY

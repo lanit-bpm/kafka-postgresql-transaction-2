@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create_source_entity
+      author: deermakov
+      changes:
+        - createTable:
+            tableName: SOURCE_ENTITY
+            columns:
+              - column:
+                  name: PROCESSED
+                  type: BOOLEAN
+                  constraints:
+                    nullable: true
+              - column:
+                  name: TEXT
+                  type: CHAR(10)
+                  constraints:
+                    nullable: true
+        - addPrimaryKey:
+            columnNames: TEXT
+            constraintName: PK_SOURCE_ENTITY
+            tableName: SOURCE_ENTITY
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SOURCE_ENTITY

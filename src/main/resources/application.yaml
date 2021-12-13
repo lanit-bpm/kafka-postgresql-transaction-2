@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: kafka-postgresql-transaction-2
+    version: replaceVersion
+  kafka:
+    #    bootstrap-servers: - задается в TestContainersInitializer
+    consumer:
+      group-id: myconsumer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "ru.lanit.research.kafkatransactions.domain"
+        isolation.level: read_committed
+    producer:
+      acks: all
+      transaction-id-prefix: tx-my-producer-factory
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  datasource:
+    driver-class-name: org.postgresql.Driver
+#    url: ${DB_URL}           - задается в TestContainersInitializer
+#    username: ${DB_USERNAME} - задается в TestContainersInitializer
+#    password: ${DB_PASSWORD} - задается в TestContainersInitializer
+  jpa:
+    generate-ddl: false  # только ручное создание объектов БД
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog-master.yaml
+
+# embedded Tomcat
+server:
+  port: 9900
+
+logging:
+  level:
+    org.apache.http: INFO
+    org.springframework.transaction.interceptor: WARN # поставить в TRACE для получения информации по транзакциям
+    root: info
+
+myservice:
+  send-transactions-faults-num: 0     # сколько нужно имитировать системных сбоев при коммитах транзакций Kafka на отправку сообщений
+  receive-transactions-faults-num: 0  # сколько нужно имитировать системных сбоев при коммитах транзакций Kafka на получение сообщений
+  business-faults: true               # имитировать ли сбои в бизнес-логике
+  topics:
+    main-topic: my-topic

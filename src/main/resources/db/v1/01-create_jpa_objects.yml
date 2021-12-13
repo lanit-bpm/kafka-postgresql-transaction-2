@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create_jpa_objects
+      author: deermakov
+      changes:
+        - createSequence: # sequence для Hibernate
+            incrementBy: 1
+            sequenceName: HIBERNATE_SEQUENCE
+            startValue: 1
+
+      rollback:
+        - dropSequence:
+            sequenceName: HIBERNATE_SEQUENCE
